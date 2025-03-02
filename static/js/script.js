@@ -31,7 +31,7 @@ function speakAndNavigate() {
     speech.onend = () => {
         stopAudioVisualizer();
         setTimeout(() => {
-            window.location.href = "text-to-audio.html"; 
+            window.location.href = "/home"; 
         }, 500);
     };
 }
