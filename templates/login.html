@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="/static/css/login.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -13,9 +13,9 @@
         <nav class="navbar">
             <a href="/home">Home</a>
             <a href="/login">login</a>
-            <a href="#">about us</a>
+            <a href="/about">about us</a>
             <a href="/contact">Contact</a>
-            <a href="#">services</a>
+            <a href="/services">services</a>
         </nav>
     </header>
     <div class="container">
@@ -23,7 +23,7 @@
         <div class="curved-shape2"></div>
         <div class="form-box Login">
             <h2 class="animation" style="--D:0; --S:21;">Login</h2>
-            <form action="/loginAction" method="POST">
+            <form action="/login" method="POST">
                 <div class="input-box animation" style="--D:1; --S:22;">
                     <input type="text" name="username" required>
                     <label for=" ">Username</label>
@@ -48,7 +48,7 @@
         </div>
         <div class="form-box Register">
             <h2 class="animation" style="--li:17; --S:0;">Register</h2>
-            <form action="/regAction" method="POST">
+            <form action="/register" method="POST">
                 <div class="input-box animation" style="--li:18; --S:1;">
                     <input type="text" name="username" required>
                     <label for="">Username</label>
