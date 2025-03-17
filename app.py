@@ -43,9 +43,7 @@ def create_users_table():
     ''')
     conn.commit()
     conn.close()
-    print("✅ Table checked/created successfully.")  # Debugging message
-
-# Call the function to create the table before the app runs
+    print("✅ Table checked/created successfully.") 
 create_users_table()
 
 @app.route("/login", methods=["GET", "POST"])
@@ -63,11 +61,10 @@ def login():
         if user and check_password_hash(user["password"], password):
             session["user"] = username
             flash("Login successful!", "success")
-            return redirect(url_for("home"))
+            return redirect(url_for("code"))
         else:
             flash("Invalid username or password!", "danger")
             return redirect(url_for("login"))
-
     return render_template("login.html")
 
 @app.route("/register", methods=["POST"])
@@ -75,12 +72,9 @@ def register():
     username = request.form["username"]
     email = request.form["email"]
     password = request.form["password"]
-
     hashed_password = generate_password_hash(password)
-
     conn = get_db_connection()
     cursor = conn.cursor()
-
     try:
         cursor.execute("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
                        (username, email, hashed_password))
@@ -92,12 +86,11 @@ def register():
         return redirect(url_for("login"))
     finally:
         conn.close()
+        
+@app.route("/code")
+def code():
+    return render_template("code.html")
 
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    flash("You have been logged out.", "info")
-    return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True) 

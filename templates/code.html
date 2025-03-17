@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Text to Speech</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; font-family: 'Poppins', sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(to right, #141e30, #243b55); color: #fff; }
+        .container { 
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
+            display: grid; gap: 15px; width: 500px; max-width: calc(100vw - 40px); 
+            padding: 25px; border-radius: 12px; font-size: 1.1rem; color: white; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        textarea, select, input { 
+            padding: 10px; font-size: 1rem; border-radius: 8px; border: 2px solid #ccc;
+            outline: none; width: 100%;
+        }
+        textarea { height: 100px; resize: none; }
+        
+        /* Button Styling */
+        button {
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white; cursor: pointer; font-weight: bold; padding: 12px 18px;
+            border: none; border-radius: 8px; font-size: 1rem;
+            transition: all 0.3s ease-in-out; text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(255, 120, 150, 0.4);
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(255, 120, 150, 0.6);
+        }
+        .controls { display: flex; justify-content: center; gap: 10px; }
+        .small-btns { display: flex; gap: 8px; }
+        .small-btns button { 
+            padding: 10px 15px; font-size: 0.9rem; 
+            background: linear-gradient(135deg, #56ccf2, #2f80ed);
+            box-shadow: 0 3px 6px rgba(47, 128, 237, 0.5);
+        }
+        .small-btns button:hover { box-shadow: 0 5px 10px rgba(47, 128, 237, 0.7); }
+        .logout-btn { margin-top: 15px; background: linear-gradient(135deg, #ff512f, #dd2476); }
+        .logout-btn:hover { box-shadow: 0 5px 12px rgba(221, 36, 118, 0.7); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="text">Enter Text:</label>
+        <textarea id="text" placeholder="Type something..."></textarea>
+
+        <label for="emotionSelect">Select Emotion:</label>
+        <select id="emotionSelect">
+            <option value="neutral">Neutral</option>
+            <option value="happy">Happy</option>
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="excited">Excited</option>
+        </select>
+
+        <label for="voiceSelect">Select Voice:</label>
+        <select id="voiceSelect"></select>
+
+        <label for="rate">Speed (Rate):</label>
+        <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1">
+        <span id="rateValue">1.0x</span>
+
+        <!-- Buttons Layout -->
+        <div class="controls">
+            <button id="speak">🔊 Speak</button>
+            <div class="small-btns">
+                <button id="pause">⏸️</button>
+                <button id="resume">▶️</button>
+                <button id="stop">⏹️</button>
+            </div>
+        </div>
+        
+        <!-- Logout Button -->
+        <button class="logout-btn" id="logout">🚪 Logout</button>
+    </div>
+
+    <script>
+        const textEL = document.getElementById('text');
+        const speakEL = document.getElementById('speak');
+        const pauseEL = document.getElementById('pause');
+        const resumeEL = document.getElementById('resume');
+        const stopEL = document.getElementById('stop');
+        const voiceSelect = document.getElementById('voiceSelect');
+        const rateInput = document.getElementById('rate');
+        const rateValue = document.getElementById('rateValue');
+        const emotionSelect = document.getElementById('emotionSelect');
+        const logoutEL = document.getElementById('logout');
+
+        let utterance;
+        let voices = [];
+
+        function populateVoices() {
+            voices = window.speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '';
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.value = voice.name;
+                option.textContent = `${voice.name} (${voice.lang})`;
+                voiceSelect.appendChild(option);
+            });
+        }
+
+        window.speechSynthesis.onvoiceschanged = populateVoices;
+
+        rateInput.addEventListener('input', () => rateValue.textContent = rateInput.value + 'x');
+
+        function applyEmotion(text, emotion) {
+            switch (emotion) {
+                case 'happy': return `😀 ${text} 😊`;
+                case 'sad': return `😢 ${text} 😞`;
+                case 'angry': return `😠 ${text.toUpperCase()}!!!`;
+                case 'excited': return `🎉 ${text.toUpperCase()} 🎊`;
+                default: return text;
+            }
+        }
+
+        function speakText() {
+            window.speechSynthesis.cancel();
+            let text = textEL.value.trim();
+            if (text) {
+                text = applyEmotion(text, emotionSelect.value);
+
+                utterance = new SpeechSynthesisUtterance(text);
+                utterance.voice = voices.find(voice => voice.name === voiceSelect.value);
+                utterance.rate = rateInput.value;
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        speakEL.addEventListener('click', speakText);
+        pauseEL.addEventListener('click', () => window.speechSynthesis.pause());
+        resumeEL.addEventListener('click', () => window.speechSynthesis.resume());
+        stopEL.addEventListener('click', () => window.speechSynthesis.cancel());
+        logoutEL.addEventListener('click', () => window.location.href = '/home');
+    </script>
+</body>
+</html>
