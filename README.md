@@ -14,5 +14,3 @@ This is a **Text-to-Speech (TTS) web application** that allows users to input te
 - ⚡ **Adjustable Speed**: Modify the speech rate for a better listening experience.
 - ⏸ **Pause/Resume/Stop** Controls: Easily control speech playback.
 - 🔐 **Logout Functionality**: Redirects the user back to the home page.
-
-## 📂 Project Structure
